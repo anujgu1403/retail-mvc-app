@@ -1,5 +1,6 @@
 package com.retail.mvc.client;
 
+import com.retail.mvc.model.Category;
 import com.retail.mvc.model.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -55,6 +56,26 @@ public class CatalogClient {
                 .uri("/product/delete/{id}", id)
                 .retrieve()
                 .toBodilessEntity()
+                .block();
+    }
+    public List<Category> getAllCategories() {
+        return webClient.get()
+                .uri("/categories")
+                .retrieve()
+                .bodyToFlux(Category.class)
+                .collectList()
+                .block();
+    }
+
+    public List<Product> getProductsByCategory(Integer categoryId) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/products")
+                        .queryParam("categoryId", categoryId)
+                        .build())
+                .retrieve()
+                .bodyToFlux(Product.class)
+                .collectList()
                 .block();
     }
 }

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>E-Cart - Product Catalog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+
+<body class="bg-light">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container">
+        <a class="navbar-brand fw-bold fs-3" href="/products">
+            <i class="bi bi-cart4 me-2"></i>E-Cart
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                <li class="nav-item"><a class="nav-link active fw-semibold" href="/products">Products</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Categories</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Orders</a></li>
+                <li class="nav-item">
+                    <a class="nav-link fs-4" href="#"><i class="bi bi-person-circle"></i></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main -->
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <h1 class="fw-bold">Discover Amazing Products</h1>
+        <p class="text-muted fs-5">Handpicked collection just for you</p>
+    </div>
+
+    <!-- Categories -->
+    <div class="text-center mb-5">
+        <div class="d-flex justify-content-center flex-wrap gap-2">
+            <a th:href="@{/products}"
+               class="btn btn-outline-primary rounded-pill px-4"
+               th:classappend="${selectedCategoryId == null ? 'active' : ''}">
+                All Products
+            </a>
+
+            <a th:each="cat : ${categories}"
+               th:href="@{/products(categoryId=${cat.categoryId})}"
+               class="btn btn-outline-primary rounded-pill px-4"
+               th:classappend="${selectedCategoryId == cat.categoryId ? 'active' : ''}"
+               th:text="${cat.name}">
+                Electronics
+            </a>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+
+        <div class="col" th:each="p : ${products}">
+            <div class="card h-100 shadow-sm border-0">
+
+                <!-- Image -->
+                <div class="bg-light text-center p-4">
+                    <img th:src="${p.imageUrl} ?: 'https://via.placeholder.com/400x400?text=No+Image'"
+                         class="img-fluid"
+                         style="height: 220px; object-fit: contain;"
+                         alt="Product image">
+                </div>
+
+                <!-- Body -->
+                <!-- Body -->
+                <div class="card-body d-flex flex-column">
+                    <!-- Title and Price on the same line -->
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="fw-bold mb-0" th:text="${p.name}">Product Name</h5>
+                        <span class="fs-4 fw-bold text-success ms-3" th:text="'$' + ${p.unitPrice}">
+            $129.99
+        </span>
+                    </div>
+
+                    <!-- Full-width Description -->
+                    <p class="text-muted small mb-3 flex-grow-1" th:text="${p.description}">
+                        Product description goes here
+                    </p>
+
+                    <!-- Category (left) + Stock + Add to Cart (right) -->
+                    <div class="mt-auto">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="badge bg-secondary"
+                  th:text="${categoryMap[p.categoryId] ?: 'Uncategorized'}">
+                Electronics
+            </span>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-danger btn-sm rounded-pill fw-semibold px-3">
+                                    <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                                </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="col-12" th:if="${products.isEmpty()}">
+            <div class="text-center py-5">
+                <i class="bi bi-bag-x fs-1 text-muted mb-3"></i>
+                <h3 class="text-muted">No products found</h3>
+
+                <p class="text-muted fs-5" th:if="${selectedCategoryId != null}">
+                    No products available in this category.
+                    <a th:href="@{/products}" class="link-primary fw-semibold">Browse all products</a>
+                </p>
+
+                <p class="text-muted fs-5" th:unless="${selectedCategoryId != null}">
+                    The catalog is empty at the moment.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-white py-4 mt-5">
+    <div class="container text-center">
+        <small>&copy; 2026 E-Cart. All rights reserved. Made with ❤️ for shoppers.</small>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

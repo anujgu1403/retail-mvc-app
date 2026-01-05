@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Product Form - E-Cart</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/products">
+            <i class="bi bi-cart3 me-2"></i>E-Cart
+        </a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-header bg-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="h4 mb-0" th:text="${product.productId != null} ? 'Edit Product' : 'Add New Product'">
+                            Add/Edit Product
+                        </h2>
+                        <a href="/products" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left me-1"></i> Back to List
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <form th:action=
+                                  @{/products/save}
+                          method="post">
+
+                        <!-- Hidden ID for updates -->
+                        <input type="hidden" th:if="${product.productId != null}"
+                               th:value="${product.productId}" name="productId">
+
+                        <!-- Product Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-semibold">Product Name</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                   th:value="${product.name}" required>
+                            <div class="form-text">Enter the name of the product</div>
+                        </div>
+
+                        <!-- Price -->
+                        <div class="mb-3">
+                            <label for="unitPrice" class="form-label fw-semibold">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">₹</span>
+                                <input type="number" step="0.01" class="form-control" id="unitPrice"
+                                       name="unitPrice" th:value="${product.unitPrice}" required>
+                            </div>
+                            <div class="form-text">Enter the price in Rupees</div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-semibold">Description</label>
+                            <textarea class="form-control" id="description" name="description"
+                                      rows="3" th:text="${product.description}"></textarea>
+                            <div class="form-text">Describe the product features</div>
+                        </div>
+
+                        <!-- Image URL -->
+                        <div class="mb-3">
+                            <label for="imageUrl" class="form-label fw-semibold">Image URL</label>
+                            <input type="url" class="form-control" id="imageUrl" name="imageUrl"
+                                   th:value="${product.imageUrl}">
+                            <div class="form-text">Optional: Enter a URL for the product image</div>
+                        </div>
+
+                        <!-- Category ID -->
+                        <div class="mb-4">
+                            <label for="categoryId" class="form-label fw-semibold">Category ID</label>
+                            <input type="number" class="form-control" id="categoryId" name="categoryId"
+                                   th:value="${product.categoryId}" required>
+                            <div class="form-text">Enter the category ID (1=Electronics, 2=Clothing, etc.)</div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="/products" class="btn btn-secondary">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save me-1"></i>
+                                <span th:text="${product.productId != null} ? 'Update Product' : 'Save Product'">
+                                        Save Product
+                                    </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Image Preview (Optional) -->
+                <div class="card-footer bg-light" th:if="${product.imageUrl != null and product.imageUrl != ''}">
+                    <h6 class="h6 mb-2">Image Preview:</h6>
+                    <img th:src="${product.imageUrl}" alt="Product Image"
+                         class="img-fluid rounded" style="max-height: 200px;"
+                         onerror="this.style.display='none'">
+                </div>
+            </div>
+
+            <!-- Form Notes -->
+            <div class="alert alert-info mt-3">
+                <h6 class="alert-heading">Form Instructions:</h6>
+                <ul class="mb-0">
+                    <li>All fields except Image URL are required</li>
+                    <li>Price should be in decimal format (e.g., 29.99)</li>
+                    <li>Category ID should be a number representing the product category</li>
+                    <li>Image URL should be a valid link to an image</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="mt-5 pt-4 border-top">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p class="text-muted small mb-0">&copy; 2023 E-Cart Catalog. Spring Boot + Bootstrap Example.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Simple form validation -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('unitPrice').value;
+            const category = document.getElementById('categoryId').value;
+
+            if (!name || !price || !category) {
+                e.preventDefault();
+                alert('Please fill in all required fields: Name, Price, and Category ID.');
+            }
+        });
+    });
+</script>
+</body>
+</html>
