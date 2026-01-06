@@ -2,6 +2,7 @@ package com.retail.mvc.client;
 
 import com.retail.mvc.model.Category;
 import com.retail.mvc.model.Product;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -12,7 +13,7 @@ public class CatalogClient {
 
     private final WebClient webClient;
 
-    public CatalogClient(WebClient webClient) {
+    public CatalogClient(@Qualifier("catalogWebClient") WebClient webClient) {
         this.webClient = webClient;
     }
 

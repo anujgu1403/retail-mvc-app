@@ -1,5 +1,6 @@
 package com.retail.mvc.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -8,9 +9,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
 
     @Bean
-    public WebClient webClient() {
+    @Qualifier("catalogWebClient")
+    public WebClient catalogWebClient() {
         return WebClient.builder()
                 .baseUrl("http://localhost:8081/api/catalog")
+                .build();
+    }
+
+    @Bean
+    @Qualifier("customerWebClient")
+    public WebClient customerWebClient() {
+        return WebClient.builder()
+                .baseUrl("http://localhost:8082/api/customer")  // Adjust to your actual customer service URL
                 .build();
     }
 }
