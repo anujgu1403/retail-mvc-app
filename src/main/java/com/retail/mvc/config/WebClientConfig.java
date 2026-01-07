@@ -1,5 +1,6 @@
 package com.retail.mvc.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -7,10 +8,23 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebClientConfig {
 
+    @Value("${catalog.service.url}")
+    private String catalogBaseUrl;
+
+    @Value("${cart.service.url}")
+    private String cartBaseUrl;
+
     @Bean
-    public WebClient webClient() {
+    public WebClient getCatalogWebClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8081/api/catalog")
+                .baseUrl(catalogBaseUrl)
+                .build();
+    }
+
+    @Bean
+    public WebClient getCartWebClient() {
+        return WebClient.builder()
+                .baseUrl(cartBaseUrl)
                 .build();
     }
 }

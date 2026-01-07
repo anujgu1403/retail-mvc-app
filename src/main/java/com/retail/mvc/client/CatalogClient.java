@@ -1,22 +1,22 @@
 package com.retail.mvc.client;
 
+import com.retail.mvc.config.WebClientConfig;
 import com.retail.mvc.model.Product;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
 @Component
 public class CatalogClient {
 
-    private final WebClient webClient;
+  @Autowired
+  private WebClientConfig webClientConfig;
 
-    public CatalogClient(WebClient webClient) {
-        this.webClient = webClient;
-    }
 
     public List<Product> getAll() {
-        return webClient.get()
+        return webClientConfig.getCatalogWebClient()
+                .get()
                 .uri("/products")
                 .retrieve()
                 .bodyToFlux(Product.class)
@@ -25,7 +25,8 @@ public class CatalogClient {
     }
 
     public Product getById(int id) {
-        return webClient.get()
+        return webClientConfig.getCatalogWebClient()
+                .get()
                 .uri("/product/{id}", id)
                 .retrieve()
                 .bodyToMono(Product.class)
@@ -33,7 +34,8 @@ public class CatalogClient {
     }
 
     public Product add(Product product) {
-        return webClient.post()
+        return webClientConfig.getCatalogWebClient()
+                .post()
                 .uri("/product/add")
                 .bodyValue(product)
                 .retrieve()
@@ -42,7 +44,8 @@ public class CatalogClient {
     }
 
     public Product update(Product product) {
-        return webClient.patch()
+        return webClientConfig.getCatalogWebClient()
+                .patch()
                 .uri("/product/update")
                 .bodyValue(product)
                 .retrieve()
@@ -51,7 +54,8 @@ public class CatalogClient {
     }
 
     public void delete(int id) {
-        webClient.delete()
+        webClientConfig.getCatalogWebClient()
+                .delete()
                 .uri("/product/delete/{id}", id)
                 .retrieve()
                 .toBodilessEntity()
