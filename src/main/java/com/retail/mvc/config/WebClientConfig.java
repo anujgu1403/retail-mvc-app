@@ -1,5 +1,6 @@
 package com.retail.mvc.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -12,6 +13,9 @@ public class WebClientConfig {
 
     @Value("${cart.service.url}")
     private String cartBaseUrl;
+
+    @Value("${customer.service.url}")
+    private String customerBaseUrl;
 
     @Bean
     public WebClient getCatalogWebClient() {
@@ -28,10 +32,9 @@ public class WebClientConfig {
     }
 
     @Bean
-    @Qualifier("customerWebClient")
     public WebClient customerWebClient() {
         return WebClient.builder()
-                .baseUrl("http://localhost:8082/api/customer")  // Adjust to your actual customer service URL
+                .baseUrl(customerBaseUrl)
                 .build();
     }
 }

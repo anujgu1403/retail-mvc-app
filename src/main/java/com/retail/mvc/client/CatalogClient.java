@@ -4,7 +4,6 @@ import com.retail.mvc.config.WebClientConfig;
 import com.retail.mvc.model.Category;
 import com.retail.mvc.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -64,7 +63,8 @@ public class CatalogClient {
                 .block();
     }
     public List<Category> getAllCategories() {
-        return webClient.get()
+        return webClientConfig.getCatalogWebClient()
+                .get()
                 .uri("/categories")
                 .retrieve()
                 .bodyToFlux(Category.class)
@@ -73,7 +73,8 @@ public class CatalogClient {
     }
 
     public List<Product> getProductsByCategory(Integer categoryId) {
-        return webClient.get()
+        return webClientConfig.getCatalogWebClient()
+                .get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/products")
                         .queryParam("categoryId", categoryId)
