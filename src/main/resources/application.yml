@@ -16,3 +16,7 @@ catalog:
 customer:
   service:
     url: http://localhost:8082/api/customer
+
+order:
+  service:
+    url: http://localhost:8086/order
