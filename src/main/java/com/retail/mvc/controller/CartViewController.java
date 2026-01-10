@@ -2,10 +2,14 @@ package com.retail.mvc.controller;
 
 import com.retail.mvc.client.CartClient;
 import com.retail.mvc.model.Cart;
+import com.retail.mvc.model.CartItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/cart")
@@ -22,7 +26,15 @@ public class CartViewController {
     }
 
     @PostMapping("/add")
-    public String addItem(@ModelAttribute Cart cart) {
+    public String addItem(@RequestParam Long cartId,
+                          @RequestParam Long userId,@ModelAttribute CartItem cartItem) {
+        List<CartItem> cartItemList = new ArrayList<>();
+        cartItemList.add(cartItem);
+        Cart cart = Cart.builder()
+                    .cartId(cartId)
+                .userId(userId)
+                .cartItems(cartItemList)
+                .build();
         cartClient.addItem(cart);
         return "redirect:/cart/user/" + cart.getUserId();
     }

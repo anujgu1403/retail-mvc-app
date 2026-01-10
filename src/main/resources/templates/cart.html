@@ -44,11 +44,19 @@
 <hr/>
 
 <h3>Add Item</h3>
-<form th:action="@{/cart/add}" method="post">
-    <input type="hidden" name="userId" th:value="${cart.userId}"/>
-    Product ID: <input type="number" name="itemNumber"/><br/>
-    Quantity: <input type="number" name="quantity"/><br/>
-    <button type="submit">Add</button>
+<form th:action="@{/cart/add}" th:object="${cartItem}" method="post">
+    <input type="hidden" name="cartId" th:value="${cart.cartId}" />
+    <input type="hidden" name="userId" th:value="${cart.userId}" />
+    Product ID:
+    <input type="number" name="itemNumber"><br/>
+
+    Quantity:
+    <input type="number" name="quantity" /><br/>
+
+    Unit Price:
+    <input type="number" name="unitPrice" /><br/>
+
+    <button type="submit">Add Item</button>
 </form>
 
 </body>
