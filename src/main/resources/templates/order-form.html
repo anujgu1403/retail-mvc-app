@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cart Checkout</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+    </style>
+</head>
+<body>
+
+<h2>Cart Details</h2>
+
+<form th:action="@{/checkout}" th:object="${cart}" method="post">
+
+    <label>User ID</label>
+    <input type="number" th:field="*{userId}" required />
+
+    <label>Active</label>
+    <input type="checkbox" th:field="*{active}" />
+
+    <h3>Cart Items</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Item Number</th>
+            <th>Unit Price</th>
+            <th>Quantity</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="item, stat : *{cartItems}">
+            <td>
+                <input type="number"
+                       th:field="*{cartItems[__${stat.index}__].itemNumber}" />
+            </td>
+            <td>
+                <input type="number" step="0.01"
+                       th:field="*{cartItems[__${stat.index}__].unitPrice}" />
+            </td>
+            <td>
+                <input type="number"
+                       th:field="*{cartItems[__${stat.index}__].quantity}" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <button type="submit">Submit Order</button>
+
+</form>
+
+</body>
+</html>

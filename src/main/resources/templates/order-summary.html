@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Order Summary</title>
+</head>
+<body>
+
+<h2>Order Submitted</h2>
+
+<p><b>User ID:</b> <span th:text="${submittedCart.userId}"></span></p>
+<p><b>Active:</b> <span th:text="${submittedCart.active}"></span></p>
+
+<h3>Items</h3>
+
+<ul>
+    <li th:each="item : ${submittedCart.cartItems}">
+        Item <span th:text="${item.itemNumber}"></span> |
+        Qty <span th:text="${item.quantity}"></span> |
+        Price <span th:text="${item.unitPrice}"></span>
+    </li>
+</ul>
+
+</body>
+</html>
