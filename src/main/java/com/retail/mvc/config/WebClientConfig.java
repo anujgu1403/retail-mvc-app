@@ -20,6 +20,9 @@ public class WebClientConfig {
     @Value("${order.service.url}")
     private String orderBaseUrl;
 
+    @Value("${payment.service.url}")
+    private String paymentBaseUrl;
+
     @Bean
     public WebClient getCatalogWebClient() {
         return WebClient.builder()
@@ -45,6 +48,13 @@ public class WebClientConfig {
     public WebClient orderWebClient() {
         return WebClient.builder()
                 .baseUrl(orderBaseUrl)
+                .build();
+    }
+
+    @Bean
+    public WebClient paymentWebClient() {
+        return WebClient.builder()
+                .baseUrl(paymentBaseUrl)
                 .build();
     }
 }

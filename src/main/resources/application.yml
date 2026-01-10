@@ -20,3 +20,7 @@ customer:
 order:
   service:
     url: http://localhost:8086/order
+
+payment:
+  service:
+    url: http://localhost:8083/payments

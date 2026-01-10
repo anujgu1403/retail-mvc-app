@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Result</title>
+</head>
+<body>
+
+<h2>Payment Status</h2>
+
+<p><b>Payment ID:</b> <span th:text="${paymentResponse.paymentId}"></span></p>
+<p><b>Status:</b> <span th:text="${paymentResponse.status}"></span></p>
+<p><b>Message:</b> <span th:text="${paymentResponse.message}"></span></p>
+<p><b>Processed At:</b> <span th:text="${paymentResponse.processedAt}"></span></p>
+
+<a href="/payments">Make Another Payment</a>
+
+</body>
+</html>
