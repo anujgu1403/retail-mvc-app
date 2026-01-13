@@ -4,3 +4,23 @@ server:
 spring:
   thymeleaf:
     cache: false
+
+cart:
+  service:
+    url: http://localhost:8082/cart
+
+catalog:
+  service:
+    url: http://localhost:8081/api/catalog
+
+customer:
+  service:
+    url: http://localhost:8085/api/customer
+
+order:
+  service:
+    url: http://localhost:8086/order
+
+payment:
+  service:
+    url: http://localhost:8083/payments

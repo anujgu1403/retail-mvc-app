@@ -2,7 +2,12 @@ package com.retail.mvc.controller;
 
 import com.retail.mvc.client.CustomerClient;
 import com.retail.mvc.model.Customer;
+import com.retail.mvc.model.LoginResponseDTO;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,27 +39,49 @@ public class CustomerViewController {
     @PostMapping("/register")
     public String register(@ModelAttribute Customer customer, Model model) {
         ResponseEntity<?> response = customerClient.register(customer);
+        System.out.println(response);
 
         if (response.getStatusCode().is2xxSuccessful()) {
             model.addAttribute("success", "Registration successful! Please login.");
-            return "customer/login";
+            model.addAttribute("isLoginPage", true);
         } else {
             model.addAttribute("error", "Registration failed: " + response.getBody());
-            return "customer/register";
+            model.addAttribute("isLoginPage", false);
         }
+            return "customer/auth";
     }
 
     @PostMapping("/login")
-    public String login(@ModelAttribute Customer customer, Model model) {
-        ResponseEntity<?> response = customerClient.login(customer);
+    public String login(@ModelAttribute Customer customer, HttpServletResponse response, Model model) {
+        ResponseEntity<LoginResponseDTO> apiResponse = customerClient.login(customer);
+        System.out.println(apiResponse);
+        System.out.println(apiResponse.getStatusCode());
+        System.out.println(apiResponse.getBody());
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            // Assuming login success returns some user data or token
-            model.addAttribute("success", "Login successful! Welcome " + customer.getEmail());
-            return "home"; // or redirect to dashboard
-        } else {
-            model.addAttribute("error", "Invalid email or password.");
-            return "customer/login";
+        if (apiResponse.getStatusCode().is2xxSuccessful()) {
+            String token = (String) apiResponse.getBody().getToken();
+            System.out.println(apiResponse.getBody().getToken());
+
+
+            if (token != null) {
+                ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
+                        .httpOnly(true)                  // ← protects from XSS
+                        .secure(true)                    // ← only HTTPS (use false only for local dev!)
+                        .path("/")                       // whole application
+                        .maxAge(15 * 60)                 // 15 minutes – match your token expiry
+                        .sameSite("Strict")              // ← or "Lax" or "None" (with Secure=true!)
+                        // .domain("yourdomain.com")     // optional
+                        .build();
+
+                // This is how you actually send it
+                response.addHeader(HttpHeaders.SET_COOKIE, jwtCookie.toString());
+
+                model.addAttribute("success", "Login successful! Welcome " + customer.getEmail());
+                return "redirect:/products";
+            }
         }
+
+        model.addAttribute("error", "Invalid email or password.");
+        return "customer/login";
     }
 }

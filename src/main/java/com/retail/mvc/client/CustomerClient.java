@@ -1,6 +1,7 @@
 package com.retail.mvc.client;
 
 import com.retail.mvc.model.Customer;
+import com.retail.mvc.model.LoginResponseDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -24,12 +25,12 @@ public class CustomerClient {
                 .block();
     }
 
-    public ResponseEntity<?> login(Customer customer) {
+    public ResponseEntity<LoginResponseDTO> login(Customer customer) {
         return webClient.post()
                 .uri("/login")
                 .bodyValue(customer)
                 .retrieve()
-                .toEntity(Object.class)
+                .toEntity(LoginResponseDTO.class)
                 .block();
     }
 }

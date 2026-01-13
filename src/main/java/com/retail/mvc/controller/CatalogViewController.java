@@ -37,7 +37,6 @@ public class CatalogViewController {
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("categoryMap", categoryMap);
-        System.out.println(products);
         return "products";
     }
 
